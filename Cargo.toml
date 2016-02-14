@@ -1,0 +1,4 @@
+[package]
+name = "egyptian_multiplication"
+version = "0.1.0"
+authors = ["Koji Ota <afterjnih@gmail.com>"]
