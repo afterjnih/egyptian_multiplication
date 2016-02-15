@@ -1,64 +1,57 @@
+use std::fmt;
 fn main() {
     // println!("Answer is {}", mult_acc4(4, 5, 6));
-    println!("Answer is {}", mult_acc4(4, 5, 6));
-    // println!("Half is {}", half(5));
-    // println!("Half is {}", half(1));
-    // println!("Answer is {}", odd(1));
+    let r = Integer { num: 4 };
+    let n = Integer { num: 5 };
+    let a = Integer { num: 6 };
+    println!("Answer is {:?}", mult_acc4(r, n, a));
 }
-trait Integer {
+trait Caliculatable {
     fn odd(&self) -> bool;
-    fn half(self) -> Self;
+    fn half(&self) -> Self;
     fn add(&self, &Self) -> Self;
     fn eq1(&self) -> bool;
 }
 
-impl Integer for i32 {
-    fn odd(&self) -> bool {
-        if self % 2 == 0 {
-            false
-        } else {
-            true
-        }
-    }
-    fn half(self) -> Self {
-        self / 2
-    }
-    fn add(&self, ta: &Self) -> Self {
-        self + ta
-    }
-    fn eq1(&self) -> bool {
-        *self == 1
+struct Integer<T> {
+    num: T,
+}
+
+impl<T> fmt::Debug for Integer<T>
+    where T: fmt::Debug
+{
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "({:?})", self.num)
     }
 }
-// fn mult_acc4(r: i32, n: i32, a: i32) -> i32 {
-fn mult_acc4<T: Integer>(r: T, n: T, a: T) -> T {
+
+impl Caliculatable for Integer<i32> {
+    fn odd(&self) -> bool {
+        self.num % 2 != 0
+    }
+    fn half(&self) -> Self {
+        Integer { num: self.num / 2 }
+    }
+    fn add(&self, operand: &Self) -> Self {
+        Integer { num: self.num + operand.num }
+    }
+    fn eq1(&self) -> bool {
+        self.num == 1
+    }
+}
+
+fn mult_acc4<T: Caliculatable>(r: T, n: T, a: T) -> T {
     let mut r = r;
     let mut n = n;
     let mut a = a;
     loop {
-        // if odd(n) {
         if n.odd() {
-            // r = r + a;
             r = r.add(&a);
-            // if n == 1 {
             if n.eq1() {
                 return r;
             }
         }
-        // n = half(n);
         n = n.half();
         a = a.add(&a);
     }
 }
-
-// fn odd(n: i32) -> bool {
-//     if n % 2 == 0 {
-//         false
-//     } else {
-//         true
-//     }
-// }
-//
-// fn half(n: i32) -> i32 {
-//     n / 2
-// }
